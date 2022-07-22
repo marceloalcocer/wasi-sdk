@@ -8,26 +8,24 @@ on:
 
 jobs:
 
+  # Build wasi-sdk
   build:
-    name: Ubuntu based build
+    name: "Build wasi-sdk"
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v1
+      - name: "Checkout wasi-sdk repo"
+        uses: actions/checkout@v1     # >@v1 fails on submodules
         with:
           submodules: true
-      - name: Install build tools
-        run: >
-          sudo apt-get install
-          ninja-build
-      - name: Build wasi-sdk
-        run: |
-          cmake --version
-          ninja --version
-        #
-        #run: >
-        #  make -j $(nproc) build
-        #    NINJA_FLAGS=-v
-        #    PREFIX=
+      - name: "Install build tools"
+        run: sudo apt-get install ninja-build
+      - name: "Build wasi-sdk"
+        run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) build
+      - name: "Upload wasi-sdk build"
+        uses: actions/upload-artifact@v3
+        with:
+          name: wasi-sdk
+          path: build/install
 
 #
 #  test:
@@ -37,14 +35,15 @@ jobs:
 #      - name: Run the testsuite
 #        run: NINJA_FLAGS=-v make check
 #
-#  package:
-#    name: "Package"
+#
+#  distribute:
+#    name: "Distribute wasi-sdk"
+#    needs: build
 #    runs-on: ubuntu-20.04
 #    steps:
-#      - name: Upload artifacts
-#        uses: actions/upload-artifact@v1
+#      - name: "Upload wasi-sdk artifacts"
+#        uses: actions/upload-artifact@v3
 #        with:
-#          # Upload the dist folder. Give it a name according to the OS it was built for.
-#          name: ${{ format( 'dist-{0}', matrix.os) }}
+#          name: wasi-sdk-ubuntu-20.04
 #          path: dist
 
