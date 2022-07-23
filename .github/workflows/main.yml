@@ -25,7 +25,7 @@ jobs:
 #     - name: "Build and package"
 #       run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) package
       # <DEBUG>
-      - run: >
+      - run: |
           echo "Building wasi-sdk"
           mkdir dist
           touch dist/wasi-sdk-0.tar.gz
