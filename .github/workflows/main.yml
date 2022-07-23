@@ -16,22 +16,22 @@ jobs:
     name: "Build wasi-sdk"
     runs-on: ubuntu-20.04
     steps:
-#     - name: "Checkout source"
-#       uses: actions/checkout@v1     # >@v1 fails on submodules
-#       with:
-#         submodules: true
-#     - name: "Install build tools"
-#       run: sudo apt-get install ninja-build
-#     - name: "Build and package"
-#       run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) package
-      # <DEBUG>
-      - run: |
-          echo "Building wasi-sdk"
-          mkdir dist
-          touch dist/wasi-sdk-0.tar.gz
-          touch dist/libclang_rt.builtins-wasm32-wasi-0.tar.gz
-          touch dist/wasi-sysroot-0.tar.gz
-      # </DEBUG>
+      - name: "Checkout source"
+        uses: actions/checkout@v1     # >@v1 fails on submodules
+        with:
+          submodules: true
+      - name: "Install build tools"
+        run: sudo apt-get install ninja-build
+      - name: "Build and package"
+        run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) package
+#     # <DEBUG>
+#     - run: |
+#         echo "Building wasi-sdk"
+#         mkdir dist
+#         touch dist/wasi-sdk-0.tar.gz
+#         touch dist/libclang_rt.builtins-wasm32-wasi-0.tar.gz
+#         touch dist/wasi-sysroot-0.tar.gz
+#     # </DEBUG>
       - name: "Upload wasi-sdk artifact"
         uses: actions/upload-artifact@v3
         with:
@@ -53,11 +53,11 @@ jobs:
     runs-on: ubuntu-20.04
     needs: build
     steps:
-#     - name: Run the test suite
-#       run: NINJA_FLAGS=-v make -j $(nproc) check
-      # <DEBUG>
-      - run: echo "Testing wasi-sdk"
-      # </DEBUG>
+      - name: Run the test suite
+        run: NINJA_FLAGS=-v make -j $(nproc) check
+#     # <DEBUG>
+#     - run: echo "Testing wasi-sdk"
+#     # </DEBUG>
 
   release:
     name: "Release wasi-sdk"
@@ -91,31 +91,31 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: wasi-sysroot.tar.gz
-      - name: "Upload wasi-sdk artifact"
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        with:
-          upload_url: ${{steps.create_release.outputs.upload_url}}
-          asset_path: ${{steps.download_wasi-sdk.outputs.download-path}}/wasi-sdk.tar.gz
-          asset_name: wasi-sdk.tar.gz
-          asset_content_type: application/x-gtar
-      - name: "Upload libclang_rt artifact"
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        with:
-          upload_url: ${{steps.create_release.outputs.upload_url}}
-          asset_path: ${{steps.download_libclang_rt.outputs.download-path}}/libclang_rt.tar.gz
-          asset_name: libclang_rt.tar.gz
-          asset_content_type: application/x-gtar
-      - name: "Upload wasi-sysroot artifact"
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        with:
-          upload_url: ${{steps.create_release.outputs.upload_url}}
-          asset_path: ${{steps.download_wasi-sysroot.outputs.download-path}}/wasi-sysroot.tar.gz
-          asset_content_type: application/x-gtar
+#     - name: "Upload wasi-sdk artifact"
+#       uses: actions/upload-release-asset@v1
+#       env:
+#         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+#       with:
+#         upload_url: ${{steps.create_release.outputs.upload_url}}
+#         asset_path: ${{steps.download_wasi-sdk.outputs.download-path}}/wasi-sdk.tar.gz
+#         asset_name: wasi-sdk.tar.gz
+#         asset_content_type: application/x-gtar
+#     - name: "Upload libclang_rt artifact"
+#       uses: actions/upload-release-asset@v1
+#       env:
+#         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+#       with:
+#         upload_url: ${{steps.create_release.outputs.upload_url}}
+#         asset_path: ${{steps.download_libclang_rt.outputs.download-path}}/libclang_rt.tar.gz
+#         asset_name: libclang_rt.tar.gz
+#         asset_content_type: application/x-gtar
+#     - name: "Upload wasi-sysroot artifact"
+#       uses: actions/upload-release-asset@v1
+#       env:
+#         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+#       with:
+#         upload_url: ${{steps.create_release.outputs.upload_url}}
+#         asset_path: ${{steps.download_wasi-sysroot.outputs.download-path}}/wasi-sysroot.tar.gz
+#         asset_content_type: application/x-gtar
 
 
