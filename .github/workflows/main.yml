@@ -17,8 +17,8 @@ jobs:
     name: "Build wasi-sdk"
     runs-on: ubuntu-20.04
     steps:
-#     - name: "Checkout wasi-sdk repo"
-#       uses: actions/checkout@v1     # >@v1 fails on submodules
+      - name: "Checkout wasi-sdk repo"
+        uses: actions/checkout@v1     # >@v1 fails on submodules
 #       with:
 #         submodules: true
 #     - name: "Install build tools"
