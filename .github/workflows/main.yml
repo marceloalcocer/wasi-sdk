@@ -24,22 +24,29 @@ jobs:
 #       run: sudo apt-get install ninja-build
 #     - name: "Build and package"
 #       run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) package
-#     - name: "Upload build artifacts"
-#       uses: actions/upload-artifact@v3
-#       with:
-#         name: wasi-sdk
-#         path: |
-#           "dist/wasi-sdk-*.tar.gz"
-#           "dist/libclang_rt.builtins-wasm32-wasi-*.tar.gz"
-#           "dist/wasi-sysroot-*.tar.gz"
       # <DEBUG>
-      - run: |
+      - run: >
           echo "Building wasi-sdk"
           mkdir dist
-          touch dist/wasi-sdk-0.tar.gz
-          touch dist/libclang_rt.builtins-wasm32-wasi-0.tar.gz
-          touch dist/wasi-sysroot-0.tar.gz
+          touch dist/wasi-sdk.tar.gz
+          touch dist/libclang_rt.tar.gz
+          touch dist/wasi-sysroot.tar.gz
       # </DEBUG>
+      - name: "Upload wasi-sdk artifact"
+        uses: actions/upload-artifact@v3
+        with:
+          path: "dist/wasi-sdk-*.tar.gz"
+          name: wasi-sdk.tar.gz
+      - name: "Upload libclang_rt artifact"
+        uses: actions/upload-artifact@v3
+        with:
+          path: "dist/libclang_rt.builtins-wasm32-wasi-*.tar.gz"
+          name: libclang_rt.tar.gz
+      - name: "Upload wasi-sysroot artifact"
+        uses: actions/upload-artifact@v3
+        with:
+          path: "dist/wasi-sysroot-*.tar.gz"
+          name: wasi-sysroot.tar.gz
 
   test:
     name: "Test wasi-sdk"
@@ -69,13 +76,44 @@ jobs:
           tag_name: ${{github.ref}}
           release_name: ${{github.ref}}
           draft: true
-      - name: "Upload release asset"
+      - name: "Download wasi-sdk artifact"
+        uses: actions/download-artifact@v3
+        with:
+          name: wasi-sdk.tar.gz
+      - name: "Download libclang_rt artifact"
+        uses: actions/download-artifact@v3
+        with:
+          name: libclang_rt.tar.gz
+      - name: "Download wasi-sysroot artifact"
+        uses: actions/download-artifact@v3
+        with:
+          name: wasi-sysroot.tar.gz
+      - name: "Upload wasi-sdk artifact"
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
           upload_url: ${{steps.create_release.outputs.upload_url}}
-          asset_path: dist/wasi-sdk-0.tar.gz
-          asset_name: wasi-sdk-0.tar.gz
+          asset_path: wasi-sdk.tar.gz
+          asset_name: wasi-sdk.tar.gz
           asset_content_type: application/x-gtar
+      - name: "Upload libclang_rt artifact"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          upload_url: ${{steps.create_release.outputs.upload_url}}
+          asset_path: libclang_rt.tar.gz
+          asset_name: libclang_rt.tar.gz
+          asset_content_type: application/x-gtar
+      - name: "Upload wasi-sdk artifact"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          upload_url: ${{steps.create_release.outputs.upload_url}}
+          asset_path: wasi-sysroot.tar.gz
+          asset_name: wasi-sysroot.tar.gz
+          asset_content_type: application/x-gtar
+
 
