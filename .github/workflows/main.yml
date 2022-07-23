@@ -5,8 +5,7 @@ on:
     tags:
       - "*"
     branches:
-      #- main           # Disabled for testing
-
+#     - main
       # <DEBUG>
       - dev
       # </DEBUG>
@@ -16,25 +15,25 @@ jobs:
   build:
     name: "Build wasi-sdk"
     runs-on: ubuntu-20.04
-    steps:
-      - name: "Checkout wasi-sdk repo"
-        uses: actions/checkout@v1     # >@v1 fails on submodules
+#   steps:
+#     - name: "Checkout source"
+#       uses: actions/checkout@v1     # >@v1 fails on submodules
 #       with:
 #         submodules: true
 #     - name: "Install build tools"
 #       run: sudo apt-get install ninja-build
-#     - name: "Build wasi-sdk"
-#       run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) build
-#     - name: "Upload wasi-sdk build"
+#     - name: "Build and package"
+#       run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) package
+#     - name: "Upload build artifacts"
 #       uses: actions/upload-artifact@v3
 #       with:
 #         name: wasi-sdk
-#         path: build/install
-
+#         path: |
+#           "dist/wasi-sdk-*.tar.gz"
+#           "dist/libclang_rt.builtins-wasm32-wasi-*.tar.gz"
+#           "dist/wasi-sysroot-*.tar.gz"
       # <DEBUG>
-      - run: |
-          echo "Event SHA: ${{github.event.after}}"
-          echo "Building wasi-sdk"
+      - run: echo "Building wasi-sdk"
       # </DEBUG>
 
   test:
@@ -42,9 +41,8 @@ jobs:
     runs-on: ubuntu-20.04
     needs: build
     steps:
-#     - name: Run the testsuite
-#       run: NINJA_FLAGS=-v make check
-
+#     - name: Run the test suite
+#       run: NINJA_FLAGS=-v make -j $(nproc) check
       # <DEBUG>
       - run: echo "Testing wasi-sdk"
       # </DEBUG>
@@ -57,13 +55,19 @@ jobs:
       contains(github.event_name, 'push')
       && contains(github.event.ref, 'refs/tags')
     steps:
-#     - name: "Upload wasi-sdk artifacts"
-#       uses: actions/upload-artifact@v3
+      - name: "Create release"
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tag_name: ${{github.ref}}
+          release_name: ${{github.ref}}
+          draft: true
+#     - name: "Upload release asset"
+#       uses: actions/upload-release-asset@v1
+#       env:
+#         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 #       with:
-#         name: wasi-sdk-ubuntu-20.04
-#         path: dist
-
-      # <DEBUG>
-      - run: echo "Creating release ${{github.ref}}"
-      # </DEBUG>
-
+#         upload_url: ${{steps.create_release.outputs.upload_url}}
+#         asset_path: "dist/wasi-sdk-*.tar.gz"
