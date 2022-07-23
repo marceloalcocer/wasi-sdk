@@ -28,9 +28,9 @@ jobs:
       - run: >
           echo "Building wasi-sdk"
           mkdir dist
-          touch dist/wasi-sdk.tar.gz
-          touch dist/libclang_rt.tar.gz
-          touch dist/wasi-sysroot.tar.gz
+          touch dist/wasi-sdk-0.tar.gz
+          touch dist/libclang_rt.builtins-wasm32-wasi-0.tar.gz
+          touch dist/wasi-sysroot-0.tar.gz
       # </DEBUG>
       - name: "Upload wasi-sdk artifact"
         uses: actions/upload-artifact@v3
