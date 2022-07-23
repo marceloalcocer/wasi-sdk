@@ -1,6 +1,8 @@
-name: Build, test, package
+name: Build, test, publish
 
 on:
+  create:
+    tags:
   push:
     branches:
       #- main           # Disabled for testing
@@ -8,42 +10,47 @@ on:
 
 jobs:
 
-  # Build wasi-sdk
-  build:
-    name: "Build wasi-sdk"
+# # Build wasi-sdk
+# build:
+#   name: "Build wasi-sdk"
+#   runs-on: ubuntu-20.04
+#   steps:
+#     - name: "Checkout wasi-sdk repo"
+#       uses: actions/checkout@v1     # >@v1 fails on submodules
+#       with:
+#         submodules: true
+#     - name: "Install build tools"
+#       run: sudo apt-get install ninja-build
+#     - name: "Build wasi-sdk"
+#       run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) build
+#     - name: "Upload wasi-sdk build"
+#       uses: actions/upload-artifact@v3
+#       with:
+#         name: wasi-sdk
+#         path: build/install
+
+#test:
+#  name: "Test wasi-sdk"
+#  runs-on: ubuntu-20.04
+#  steps:
+#    - name: Run the testsuite
+#      run: NINJA_FLAGS=-v make check
+
+
+  publish:
+    name: "Publish wasi-sdk"
+#   needs: build
     runs-on: ubuntu-20.04
     steps:
-      - name: "Checkout wasi-sdk repo"
-        uses: actions/checkout@v1     # >@v1 fails on submodules
-        with:
-          submodules: true
-      - name: "Install build tools"
-        run: sudo apt-get install ninja-build
-      - name: "Build wasi-sdk"
-        run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) build
-      - name: "Upload wasi-sdk build"
-        uses: actions/upload-artifact@v3
-        with:
-          name: wasi-sdk
-          path: build/install
-
-#
-#  test:
-#    name: "Test"
-#    runs-on: ubuntu-20.04
-#    steps:
-#      - name: Run the testsuite
-#        run: NINJA_FLAGS=-v make check
-#
-#
-#  distribute:
-#    name: "Distribute wasi-sdk"
-#    needs: build
-#    runs-on: ubuntu-20.04
-#    steps:
-#      - name: "Upload wasi-sdk artifacts"
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: wasi-sdk-ubuntu-20.04
-#          path: dist
+      - name: "Echo"
+        if: contains(github.event_name, 'create')
+        run: echo "Event was reference creation (${{github.event_name}})"
+      - name: "Echo"
+        if: contains(github.event_name, 'push')
+        run: echo "Event was push (${{github.event_name}})"
+#     - name: "Upload wasi-sdk artifacts"
+#       uses: actions/upload-artifact@v3
+#       with:
+#         name: wasi-sdk-ubuntu-20.04
+#         path: dist
 
