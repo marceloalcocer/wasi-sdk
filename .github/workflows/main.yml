@@ -76,28 +76,28 @@ jobs:
           tag_name: ${{github.ref}}
           release_name: ${{github.ref}}
           draft: true
-      - name: "Download wasi-sysroot artifact"
-        uses: actions/download-artifact@v3
-        with:
-          name: wasi-sysroot.tar.gz
-          path: .
       - name: "Download wasi-sdk artifact"
+        id: download_wasi-sdk
         uses: actions/download-artifact@v3
         with:
           name: wasi-sdk.tar.gz
-          path: .
       - name: "Download libclang_rt artifact"
+        id: download_libclang_rt
         uses: actions/download-artifact@v3
         with:
           name: libclang_rt.tar.gz
-          path: .
+      - name: "Download wasi-sysroot artifact"
+        id: download_wasi-sysroot
+        uses: actions/download-artifact@v3
+        with:
+          name: wasi-sysroot.tar.gz
       - name: "Upload wasi-sdk artifact"
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
           upload_url: ${{steps.create_release.outputs.upload_url}}
-          asset_path: wasi-sdk.tar.gz
+          asset_path: ${{steps.download_wasi-sdk.outputs.download-path}}/wasi-sdk.tar.gz
           asset_name: wasi-sdk.tar.gz
           asset_content_type: application/x-gtar
       - name: "Upload libclang_rt artifact"
@@ -106,17 +106,16 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
           upload_url: ${{steps.create_release.outputs.upload_url}}
-          asset_path: libclang_rt.tar.gz
+          asset_path: ${{steps.download_libclang_rt.outputs.download-path}}/libclang_rt.tar.gz
           asset_name: libclang_rt.tar.gz
           asset_content_type: application/x-gtar
-      - name: "Upload wasi-sdk artifact"
+      - name: "Upload wasi-sysroot artifact"
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
           upload_url: ${{steps.create_release.outputs.upload_url}}
-          asset_path: wasi-sysroot.tar.gz
-          asset_name: wasi-sysroot.tar.gz
+          asset_path: ${{steps.download_wasi-sysroot.outputs.download-path}}/wasi-sysroot.tar.gz
           asset_content_type: application/x-gtar
 
 
