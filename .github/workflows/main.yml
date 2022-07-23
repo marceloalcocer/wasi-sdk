@@ -38,7 +38,7 @@ jobs:
           mkdir dist
           touch dist/wasi-sdk-0.tar.gz
           touch dist/libclang_rt.builtins-wasm32-wasi-0.tar.gz
-          touch dist/wasi-sysroot-0.tar.gz"
+          touch dist/wasi-sysroot-0.tar.gz
       # </DEBUG>
 
   test:
@@ -76,3 +76,4 @@ jobs:
         with:
           upload_url: ${{steps.create_release.outputs.upload_url}}
           asset_path: "dist/wasi-sdk-*.tar.gz"
+
