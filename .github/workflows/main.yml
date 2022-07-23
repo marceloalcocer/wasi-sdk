@@ -1,9 +1,8 @@
 name: Build, test, publish
 
 on:
-  create:
-    tags:
   push:
+    tags:
     branches:
       #- main           # Disabled for testing
       - dev
@@ -42,12 +41,12 @@ jobs:
 #   needs: build
     runs-on: ubuntu-20.04
     steps:
-      - name: "Echo"
-        if: contains(github.event_name, 'create')
-        run: echo "Event was reference creation (${{github.event_name}})"
-      - name: "Echo"
-        if: contains(github.event_name, 'push')
-        run: echo "Event was push (${{github.event_name}})"
+      - name: "Echo push to branch"
+        if: contains(github.event_name, 'push') && contains(github.event.ref, 'refs/heads')
+        run: echo "Event was push to branch (${{github.event.ref}})"
+      - name: "Echo push tag"
+        if: contains(github.event_name, 'push') && contains(github.event.ref, 'refs/tags')
+        run: echo "Event was tag push (${{github.event.ref}})"
 #     - name: "Upload wasi-sdk artifacts"
 #       uses: actions/upload-artifact@v3
 #       with:
