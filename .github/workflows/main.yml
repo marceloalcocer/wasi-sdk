@@ -76,18 +76,21 @@ jobs:
           tag_name: ${{github.ref}}
           release_name: ${{github.ref}}
           draft: true
-      - name: "Download wasi-sdk artifact"
-        uses: actions/download-artifact@v3
-        with:
-          name: wasi-sdk.tar.gz
-      - name: "Download libclang_rt artifact"
-        uses: actions/download-artifact@v3
-        with:
-          name: libclang_rt.tar.gz
       - name: "Download wasi-sysroot artifact"
         uses: actions/download-artifact@v3
         with:
           name: wasi-sysroot.tar.gz
+          path: .
+      - name: "Download wasi-sdk artifact"
+        uses: actions/download-artifact@v3
+        with:
+          name: wasi-sdk.tar.gz
+          path: .
+      - name: "Download libclang_rt artifact"
+        uses: actions/download-artifact@v3
+        with:
+          name: libclang_rt.tar.gz
+          path: .
       - name: "Upload wasi-sdk artifact"
         uses: actions/upload-release-asset@v1
         env:
