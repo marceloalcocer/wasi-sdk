@@ -77,4 +77,5 @@ jobs:
           upload_url: ${{steps.create_release.outputs.upload_url}}
           asset_path: "dist/wasi-sdk-*.tar.gz"
           asset_name: dist/wasi-sdk-x.tar.gz
+          asset_content_type: application/x-gtar
 
