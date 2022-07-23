@@ -1,11 +1,15 @@
-name: Build, test, release
+name: "Build, test, release!"
+
 on:
   push:
     tags:
       - "*"
     branches:
       #- main           # Disabled for testing
+
+      # <DEBUG>
       - dev
+      # </DEBUG>
 
 jobs:
 
@@ -13,12 +17,6 @@ jobs:
     name: "Build wasi-sdk"
     runs-on: ubuntu-20.04
     steps:
-
-      # <DEBUG>
-      - run: echo "Event SHA: ${{github.event.after}}"
-      - run: echo "Building wasi-sdk"
-      # </DEBUG>
-
 #     - name: "Checkout wasi-sdk repo"
 #       uses: actions/checkout@v1     # >@v1 fails on submodules
 #       with:
@@ -33,19 +31,22 @@ jobs:
 #         name: wasi-sdk
 #         path: build/install
 
+      # <DEBUG>
+      - run: echo "Event SHA: ${{github.event.after}}"
+      - run: echo "Building wasi-sdk"
+      # </DEBUG>
+
   test:
     name: "Test wasi-sdk"
     runs-on: ubuntu-20.04
     needs: build
     steps:
+#     - name: Run the testsuite
+#       run: NINJA_FLAGS=-v make check
 
       # <DEBUG>
       - run: echo "Testing wasi-sdk"
       # </DEBUG>
-
-#     - name: Run the testsuite
-#       run: NINJA_FLAGS=-v make check
-
 
   release:
     name: "Release wasi-sdk"
@@ -55,14 +56,13 @@ jobs:
       contains(github.event_name, 'push')
       && contains(github.event.ref, 'refs/tags')
     steps:
-
-      # <DEBUG>
-      - run: echo "Creating release ${{github.ref}}"
-      # </DEBUG>
-
 #     - name: "Upload wasi-sdk artifacts"
 #       uses: actions/upload-artifact@v3
 #       with:
 #         name: wasi-sdk-ubuntu-20.04
 #         path: dist
+
+      # <DEBUG>
+      - run: echo "Creating release ${{github.ref}}"
+      # </DEBUG>
 
