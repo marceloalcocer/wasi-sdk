@@ -1,4 +1,4 @@
-name: "Build, test, release"
+name: "Build, test, release!"
 
 on:
   push:
@@ -32,8 +32,9 @@ jobs:
 #         path: build/install
 
       # <DEBUG>
-      - run: echo "Event SHA: ${{github.event.after}}"
-      - run: echo "Building wasi-sdk"
+      - run: |
+        echo "Event SHA: ${{github.event.after}}"
+        echo "Building wasi-sdk"
       # </DEBUG>
 
   test:
