@@ -3,6 +3,7 @@ name: Build, test, publish
 on:
   push:
     tags:
+      - "*"
     branches:
       #- main           # Disabled for testing
       - dev
