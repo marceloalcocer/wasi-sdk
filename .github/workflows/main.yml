@@ -1,5 +1,4 @@
-name: Build, test, publish
-
+name: Build, test, release
 on:
   push:
     tags:
@@ -10,11 +9,16 @@ on:
 
 jobs:
 
-# # Build wasi-sdk
-# build:
-#   name: "Build wasi-sdk"
-#   runs-on: ubuntu-20.04
-#   steps:
+  build:
+    name: "Build wasi-sdk"
+    runs-on: ubuntu-20.04
+    steps:
+
+      # <DEBUG>
+      - run: echo "Event SHA: ${{github.event.after}}"
+      - run: echo "Building wasi-sdk"
+      # </DEBUG>
+
 #     - name: "Checkout wasi-sdk repo"
 #       uses: actions/checkout@v1     # >@v1 fails on submodules
 #       with:
@@ -29,25 +33,33 @@ jobs:
 #         name: wasi-sdk
 #         path: build/install
 
-#test:
-#  name: "Test wasi-sdk"
-#  runs-on: ubuntu-20.04
-#  steps:
-#    - name: Run the testsuite
-#      run: NINJA_FLAGS=-v make check
-
-
-  publish:
-    name: "Publish wasi-sdk"
-#   needs: build
+  test:
+    name: "Test wasi-sdk"
     runs-on: ubuntu-20.04
+    needs: build
     steps:
-      - name: "Echo push to branch"
-        if: contains(github.event_name, 'push') && contains(github.event.ref, 'refs/heads')
-        run: echo "Event was push to branch (${{github.event.ref}})"
-      - name: "Echo push tag"
-        if: contains(github.event_name, 'push') && contains(github.event.ref, 'refs/tags')
-        run: echo "Event was tag push (${{github.event.ref}})"
+
+      # <DEBUG>
+      - run: echo "Testing wasi-sdk"
+      # </DEBUG>
+
+#     - name: Run the testsuite
+#       run: NINJA_FLAGS=-v make check
+
+
+  release:
+    name: "Release wasi-sdk"
+    runs-on: ubuntu-20.04
+    needs: test
+    if: >-
+      contains(github.event_name, 'push')
+      && contains(github.event.ref, 'refs/tags')
+    steps:
+
+      # <DEBUG>
+      - run: echo "Creating release ${{github.ref}}"
+      # </DEBUG>
+
 #     - name: "Upload wasi-sdk artifacts"
 #       uses: actions/upload-artifact@v3
 #       with:
