@@ -45,7 +45,12 @@ jobs:
 
   test:
     name: "Test wasi-sdk"
-    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        os:
+          - ubuntu-20.04
+      fail-fast: false
+    runs-on: ${{matrix.os}}
     needs: build
     steps:
       - name: "Checkout source"
