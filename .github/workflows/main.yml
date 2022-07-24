@@ -96,7 +96,7 @@ jobs:
           name: ${{format('dist-{0}',matrix.os)}}
           path: dist
       - name: "Create release"
-        uses: actions/upload-release-asset@v1
+        uses: softprops/action-gh-release@v1
         with:
           draft: true
           files: |
