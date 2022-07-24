@@ -62,19 +62,22 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{format('dist-{0}',matrix.os)}}
-      - name: "Extract build artifacts"
-        run: >-
-          unzip ${{steps.download.outputs.download-path}}
-          && tar -xzvf dist/wasi-sdk-$(./version.sh)-linux.tar.gz
-      - name: "Install build artifacts"
-        run: >-
-          mkdir build
-          && mv wasi-sdk-$(./version.sh)-linux build/install
+#     - name: "Extract build artifacts"
+#       run: >-
+#         unzip ${{steps.download.outputs.download-path}}
+#         && tar -xzvf dist/wasi-sdk-$(./version.sh)-linux.tar.gz
+#     - name: "Install build artifacts"
+#       run: >-
+#         mkdir build
+#         && mv wasi-sdk-$(./version.sh)-linux build/install
 #     - name: "Run test suite"
 #       run: >-
 #         NINJA_FLAGS=-v PREFIX= make -j $(nproc) check
       # <DEBUG>
-      - run: echo "Run test suite"
+      - run: |-
+          echo "Run test suite"
+          pwd
+          ls -R
       # </DEBUG>
 
   release:
