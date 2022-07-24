@@ -17,7 +17,9 @@ jobs:
     strategy:
       matrix:
         os:
+#         - ubuntu-18.04
           - ubuntu-20.04
+#         - ubuntu-22.04
       fail-fast: false
     runs-on: ${{matrix.os}}
     steps:
@@ -48,7 +50,9 @@ jobs:
     strategy:
       matrix:
         os:
+#         - ubuntu-18.04
           - ubuntu-20.04
+#         - ubuntu-22.04
       fail-fast: false
     runs-on: ${{matrix.os}}
     needs: build
@@ -82,7 +86,9 @@ jobs:
     strategy:
       matrix:
         os:
+#         - ubuntu-18.04
           - ubuntu-20.04
+#         - ubuntu-22.04
       fail-fast: false
     runs-on: ${{matrix.os}}
     needs: test
@@ -95,14 +101,13 @@ jobs:
         with:
           name: ${{format('dist-{0}',matrix.os)}}
           path: dist
+      - name: "Rename build artifacts"
+        run: for file in dist/*.tar.gz; do mv $file ${file/.tar.gz/${{matrix.os}}_${{runner.arch}}_.tar.gz}; done
       - name: "Create release"
         uses: softprops/action-gh-release@v1
         with:
           draft: true
-          files: |
-            dist/wasi-sdk-*-linux.tar.gz
-            dist/libclang_rt.builtins-wasm32-wasi-*.tar.gz
-            dist/wasi-sysroot-*.tar.gz
+          files: dist/*.tar.gz
 
 #     - name: "Create release"
 #       id: create_release
