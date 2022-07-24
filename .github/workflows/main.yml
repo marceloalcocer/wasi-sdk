@@ -35,17 +35,17 @@ jobs:
       - name: "Upload wasi-sdk artifact"
         uses: actions/upload-artifact@v3
         with:
-          path: "dist/wasi-sdk-*.tar.gz"
+          path: "dist/wasi-sdk-0.tar.gz"
           name: wasi-sdk.tar.gz
       - name: "Upload libclang_rt artifact"
         uses: actions/upload-artifact@v3
         with:
-          path: "dist/libclang_rt.builtins-wasm32-wasi-*.tar.gz"
+          path: "dist/libclang_rt.builtins-wasm32-wasi-0.tar.gz"
           name: libclang_rt.tar.gz
       - name: "Upload wasi-sysroot artifact"
         uses: actions/upload-artifact@v3
         with:
-          path: "dist/wasi-sysroot-*.tar.gz"
+          path: "dist/wasi-sysroot-0.tar.gz"
           name: wasi-sysroot.tar.gz
 
   test:
