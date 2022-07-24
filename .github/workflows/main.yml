@@ -97,8 +97,8 @@ jobs:
           path: dist
       - name: "Create release"
         uses: actions/upload-release-asset@v1
-        draft: true
         with:
+          draft: true
           files: |
             dist/wasi-sdk-*-linux.tar.gz
             dist/libclang_rt.builtins-wasm32-wasi-*.tar.gz
