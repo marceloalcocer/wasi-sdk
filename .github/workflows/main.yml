@@ -33,9 +33,9 @@ jobs:
       - run: |
           echo "Build and package"
           mkdir dist
-          touch dist/wasi-sdk-$(./version.sh)-linux.tar.gz
-          touch dist/libclang_rt.builtins-wasm32-wasi-$(./version.sh).tar.gz
-          touch dist/wasi-sysroot-$(./version.sh).tar.gz
+          echo foo > dist/wasi-sdk-$(./version.sh)-linux.tar.gz
+          echo bar > dist/libclang_rt.builtins-wasm32-wasi-$(./version.sh).tar.gz
+          echo baz > dist/wasi-sysroot-$(./version.sh).tar.gz
       # </DEBUG>
       - name: "Upload build artifacts"
         uses: actions/upload-artifact@v3
