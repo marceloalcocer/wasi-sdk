@@ -58,29 +58,33 @@ jobs:
         with:
           submodules: false
       - name: "Download build artifacts"
-        id: download
         uses: actions/download-artifact@v3
         with:
           name: ${{format('dist-{0}',matrix.os)}}
-#     - name: "Extract build artifacts"
-#       run: tar -xzvf dist/wasi-sdk-$(./version.sh)-linux.tar.gz
-#     - name: "Install build artifacts"
-#       run: >-
-#         mkdir build
-#         && mv wasi-sdk-$(./version.sh)-linux build/install
+          path: dist
+      - name: "Extract build artifacts"
+        run: tar -xzvf dist/wasi-sdk-$(./version.sh)-linux.tar.gz
+      - name: "Install build artifacts"
+        run: >-
+          mkdir build
+          && mv wasi-sdk-$(./version.sh)-linux build/install
 #     - name: "Run test suite"
 #       run: >-
 #         NINJA_FLAGS=-v PREFIX= make -j $(nproc) check
       # <DEBUG>
-      - run: |-
+      - run: |
           echo "Run test suite"
-          pwd
           ls -R
       # </DEBUG>
 
   release:
     name: "Release wasi-sdk"
-    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        os:
+          - ubuntu-20.04
+      fail-fast: false
+    runs-on: ${{matrix.os}}
     needs: test
     if: >-
       contains(github.event_name, 'push')
@@ -96,39 +100,35 @@ jobs:
           release_name: ${{github.ref}}
           draft: true
       - name: "Download build artifacts"
-        id: download
         uses: actions/download-artifact@v3
         with:
           name: ${{format('dist-{0}',matrix.os)}}
-      - name: "Extract build artifacts"
-        run: >-
-          unzip ${{steps.download.outputs.download-path}}
-          && tar -xzvf dist/wasi-sdk-$(./version.sh)-linux.tar.gz
-#     - name: "Upload wasi-sdk artifact"
-#       uses: actions/upload-release-asset@v1
-#       env:
-#         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-#       with:
-#         upload_url: ${{steps.create_release.outputs.upload_url}}
-#         asset_path: ${{steps.download_wasi-sdk.outputs.download-path}}/wasi-sdk.tar.gz
-#         asset_name: wasi-sdk.tar.gz
-#         asset_content_type: application/x-gtar
-#     - name: "Upload libclang_rt artifact"
-#       uses: actions/upload-release-asset@v1
-#       env:
-#         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-#       with:
-#         upload_url: ${{steps.create_release.outputs.upload_url}}
-#         asset_path: ${{steps.download_libclang_rt.outputs.download-path}}/libclang_rt.tar.gz
-#         asset_name: libclang_rt.tar.gz
-#         asset_content_type: application/x-gtar
-#     - name: "Upload wasi-sysroot artifact"
-#       uses: actions/upload-release-asset@v1
-#       env:
-#         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-#       with:
-#         upload_url: ${{steps.create_release.outputs.upload_url}}
-#         asset_path: ${{steps.download_wasi-sysroot.outputs.download-path}}/wasi-sysroot.tar.gz
-#         asset_content_type: application/x-gtar
+          path: dist
+      - name: "Upload wasi-sdk artifact"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          upload_url: ${{steps.create_release.outputs.upload_url}}
+          asset_path: dist/wasi-sdk-*.tar.gz
+          asset_name: wasi-sdk.tar.gz
+          asset_content_type: application/x-gtar
+      - name: "Upload libclang_rt artifact"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          upload_url: ${{steps.create_release.outputs.upload_url}}
+          asset_path: dist/libclang_rt*.tar.gz
+          asset_name: libclang_rt.tar.gz
+          asset_content_type: application/x-gtar
+      - name: "Upload wasi-sysroot artifact"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          upload_url: ${{steps.create_release.outputs.upload_url}}
+          asset_path: dist/wasi-sysroot*.tar.gz
+          asset_content_type: application/x-gtar
 
 
