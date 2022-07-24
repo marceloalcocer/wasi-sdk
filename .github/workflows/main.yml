@@ -21,8 +21,8 @@ jobs:
       fail-fast: false
     runs-on: ${{matrix.os}}
     steps:
-#     - name: "Checkout source"
-#       uses: actions/checkout@v1     # >@v1 fails on submodules
+      - name: "Checkout source"
+        uses: actions/checkout@v1     # >@v1 fails on submodules
 #       with:
 #         submodules: true
 #     - name: "Install build tools"
@@ -63,9 +63,7 @@ jobs:
         with:
           name: ${{format('dist-{0}',matrix.os)}}
 #     - name: "Extract build artifacts"
-#       run: >-
-#         unzip ${{steps.download.outputs.download-path}}
-#         && tar -xzvf dist/wasi-sdk-$(./version.sh)-linux.tar.gz
+#       run: tar -xzvf dist/wasi-sdk-$(./version.sh)-linux.tar.gz
 #     - name: "Install build artifacts"
 #       run: >-
 #         mkdir build
