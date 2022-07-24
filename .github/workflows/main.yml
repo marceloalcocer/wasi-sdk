@@ -90,49 +90,54 @@ jobs:
       contains(github.event_name, 'push')
       && contains(github.event.ref, 'refs/tags')
     steps:
-      - name: "Checkout source"
-        uses: actions/checkout@v1     # >@v1 fails on submodules
-        with:
-          submodules: false
-      - name: "Create release"
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        with:
-          tag_name: ${{github.ref}}
-          release_name: ${{github.ref}}
-          draft: true
       - name: "Download build artifacts"
         uses: actions/download-artifact@v3
         with:
           name: ${{format('dist-{0}',matrix.os)}}
           path: dist
-      - name: "Upload wasi-sdk artifact"
+      - name: "Create release"
         uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        draft: true
         with:
-          upload_url: ${{steps.create_release.outputs.upload_url}}
-          asset_path: dist/wasi-sdk-$(./version.sh)-linux.tar.gz
-          asset_name: wasi-sdk.tar.gz
-          asset_content_type: application/x-gtar
-      - name: "Upload libclang_rt artifact"
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        with:
-          upload_url: ${{steps.create_release.outputs.upload_url}}
-          asset_path: dist/libclang_rt.builtins-wasm32-wasi-$(./version.sh).tar.gz
-          asset_name: libclang_rt.tar.gz
-          asset_content_type: application/x-gtar
-      - name: "Upload wasi-sysroot artifact"
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        with:
-          upload_url: ${{steps.create_release.outputs.upload_url}}
-          asset_path: dist/wasi-sysroot-$(./version.sh).tar.gz
-          asset_content_type: application/x-gtar
+          files: |
+            dist/wasi-sdk-*-linux.tar.gz
+            dist/libclang_rt.builtins-wasm32-wasi-*.tar.gz
+            dist/wasi-sysroot-*.tar.gz
+
+#     - name: "Create release"
+#       id: create_release
+#       uses: actions/create-release@v1
+#       env:
+#         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+#       with:
+#         tag_name: ${{github.ref}}
+#         release_name: ${{github.ref}}
+#         draft: true
+#     - name: "Upload wasi-sdk artifact"
+#       uses: actions/upload-release-asset@v1
+#       env:
+#         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+#       with:
+#         upload_url: ${{steps.create_release.outputs.upload_url}}
+#         asset_path: dist/wasi-sdk-*-linux.tar.gz
+#         asset_name: wasi-sdk.tar.gz
+#         asset_content_type: application/x-gtar
+#     - name: "Upload libclang_rt artifact"
+#       uses: actions/upload-release-asset@v1
+#       env:
+#         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+#       with:
+#         upload_url: ${{steps.create_release.outputs.upload_url}}
+#         asset_path: dist/libclang_rt.builtins-wasm32-wasi-*.tar.gz
+#         asset_name: libclang_rt.tar.gz
+#         asset_content_type: application/x-gtar
+#     - name: "Upload wasi-sysroot artifact"
+#       uses: actions/upload-release-asset@v1
+#       env:
+#         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+#       with:
+#         upload_url: ${{steps.create_release.outputs.upload_url}}
+#         asset_path: dist/wasi-sysroot-*.tar.gz
+#         asset_content_type: application/x-gtar
 
 
