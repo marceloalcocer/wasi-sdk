@@ -62,12 +62,12 @@ jobs:
         with:
           name: ${{format('dist-{0}',matrix.os)}}
           path: dist
-      - name: "Extract build artifacts"
-        run: tar -xzvf dist/wasi-sdk-$(./version.sh)-linux.tar.gz
-      - name: "Install build artifacts"
-        run: >-
-          mkdir build
-          && mv wasi-sdk-$(./version.sh)-linux build/install
+#     - name: "Extract build artifacts"
+#       run: tar -xvzf dist/wasi-sdk-$(./version.sh)-linux.tar.gz
+#     - name: "Install build artifacts"
+#       run: >-
+#         mkdir build
+#         && mv wasi-sdk-$(./version.sh)-linux build/install
 #     - name: "Run test suite"
 #       run: >-
 #         NINJA_FLAGS=-v PREFIX= make -j $(nproc) check
