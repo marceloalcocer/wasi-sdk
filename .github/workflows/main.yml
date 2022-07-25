@@ -22,11 +22,9 @@ jobs:
           - macos-latest
       fail-fast: false
     runs-on: ${{matrix.os}}
-    steps:
-      - name: "Build and test"
-        uses: marceloalcocer/wasi-sdk/.github/workflows/build@dev
-        with:
-          os: ${{matrix.os}}
+    uses: ./.github/workflows/build
+    with:
+      os: ${{matrix.os}}
 
   release:
     name: "Release"
