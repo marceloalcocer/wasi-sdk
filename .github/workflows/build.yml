@@ -29,11 +29,11 @@ jobs:
       - run: |
           echo "Build and package"
           mkdir dist
-          touch foo
-          tar -czvf dist/wasi-sdk-$(./version.sh)-linux.tar.gz foo
-          tar -czvf dist/libclang_rt.builtins-wasm32-wasi-$(./version.sh).tar.gz foo
-          tar -czvf dist/wasi-sysroot-$(./version.sh).tar.gz foo
-          rm foo
+          mkdir wasi-sdk-0
+          tar -czvf dist/wasi-sdk-$(./version.sh)-linux.tar.gz wasi-sdk-0
+          tar -czvf dist/libclang_rt.builtins-wasm32-wasi-$(./version.sh).tar.gz wasi-sdk-0
+          tar -czvf dist/wasi-sysroot-$(./version.sh).tar.gz wasi-sdk-0
+          rmdir wasi-sdk-0
       # </DEBUG>
       - name: "Upload build artifacts"
         uses: actions/upload-artifact@v3
