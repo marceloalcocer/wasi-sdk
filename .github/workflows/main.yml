@@ -71,7 +71,7 @@ jobs:
       - name: "Install build artifacts"
         run: >-
           mkdir build
-          && mv wasi-sdk-$(./version.sh)-linux build/install
+          && mv wasi-sdk-$(./version.sh) build/install
       - name: "Run test suite"
         run: >-
           NINJA_FLAGS=-v PREFIX= make -j $(nproc) check
