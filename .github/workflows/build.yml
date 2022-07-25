@@ -11,7 +11,7 @@ jobs:
 
   build:
     runs-on: ${{inputs.os}}
-    name: "Build (${{inputs.os}})"
+    name: "Build"
     steps:
 #     - name: "Checkout source"
 #       uses: actions/checkout@v1     # >@v1 fails on submodules
@@ -43,7 +43,7 @@ jobs:
 
   test:
     runs-on: ${{inputs.os}}
-    name: "Test ${{inputs.os}}"
+    name: "Test"
     needs: build
     steps:
 #     - name: "Checkout source"
