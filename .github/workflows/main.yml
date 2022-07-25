@@ -15,13 +15,14 @@ jobs:
 
   build_ubuntu:
     name: "Build and test (ubuntu)"
-    runs-on: ubuntu-latest
+#   runs-on: ubuntu-latest
     uses: ./.github/workflows/build.yml
     with:
       os: ubuntu-latest
+
   build_macos:
     name: "Build and test (macos)"
-    runs-on: macos-latest
+#   runs-on: macos-latest
     uses: ./.github/workflows/build.yml
     with:
       os: macos-latest
