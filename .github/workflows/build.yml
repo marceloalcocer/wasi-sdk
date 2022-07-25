@@ -17,12 +17,12 @@ jobs:
 #       uses: actions/checkout@v1     # >@v1 fails on submodules
 #       with:
 #         submodules: true
-      - name: "Install build tools (Ubuntu)"
-        run: sudo apt-get install ninja-build
-        if: contains(inputs.os, 'ubuntu')
-      - name: "Install build tools (macOS)"
-        run: brew install ninja
-        if: contains(inputs.os, 'mac')
+#     - name: "Install build tools (Ubuntu)"
+#       run: sudo apt-get install ninja-build
+#       if: contains(inputs.os, 'ubuntu')
+#     - name: "Install build tools (macOS)"
+#       run: brew install ninja
+#       if: contains(inputs.os, 'mac')
 #     - name: "Build and package"
 #       run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) package
       # <DEBUG>
