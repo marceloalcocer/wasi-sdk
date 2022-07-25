@@ -19,10 +19,10 @@ jobs:
 #         submodules: true
       - name: "Install build tools (Ubuntu)"
         run: sudo apt-get install ninja-build
-        if: contains(inputs.os, "ubuntu")
+        if: contains(inputs.os, 'ubuntu')
       - name: "Install build tools (macOS)"
         run: brew install ninja
-        if: contains(inputs.os, "mac")
+        if: contains(inputs.os, 'mac')
 #     - name: "Build and package"
 #       run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) package
       # <DEBUG>
