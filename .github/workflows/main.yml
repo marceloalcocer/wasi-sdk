@@ -41,7 +41,7 @@ jobs:
           name: ${{ format('dist-{0}', runner.os) }}
           path: dist
       - name: "Rename build artifacts"
-        run: for file in dist/*.tar.gz; do mv $file ${file/.tar.gz/_${{runner.os}}_${{runner.arch}}.tar.gz}; done
+        run: for file in dist/*.tar.gz; do mv $file ${file/.tar.gz/-${{runner.os}}-${{runner.arch}}.tar.gz}; done
       - name: "Create release"
         uses: softprops/action-gh-release@v1
         with:
