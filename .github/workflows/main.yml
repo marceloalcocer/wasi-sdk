@@ -31,9 +31,7 @@ jobs:
     needs: 
       - build_ubuntu
       - build_macos
-    if: >-
-      contains(github.event_name, 'push')
-      && contains(github.event.ref, 'refs/tags')
+    if: github.ref_type == 'tag'
     steps:
       - name: "Download build artifacts"
         uses: actions/download-artifact@v3
