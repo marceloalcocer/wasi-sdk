@@ -14,15 +14,13 @@ on:
 jobs:
 
   build_ubuntu:
-    name: "Build and test (ubuntu)"
-#   runs-on: ubuntu-latest
+    name: "Ubuntu"
     uses: ./.github/workflows/build.yml
     with:
       os: ubuntu-latest
 
   build_macos:
-    name: "Build and test (macos)"
-#   runs-on: macos-latest
+    name: "macOS"
     uses: ./.github/workflows/build.yml
     with:
       os: macos-latest
@@ -34,8 +32,8 @@ jobs:
       - build_ubuntu
       - build_macos
     if: >-
-      contains(github.event_name, 'push')
-      && contains(github.event.ref, 'refs/tags')
+      contains(github.event_name, "push")
+      && contains(github.event.ref, "refs/tags")
     steps:
       - name: "Download build artifacts"
         uses: actions/download-artifact@v3

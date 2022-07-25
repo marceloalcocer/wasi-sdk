@@ -13,25 +13,27 @@ jobs:
     runs-on: ${{inputs.os}}
     name: "Build (${{inputs.os}})"
     steps:
-      - name: "Checkout source"
-        uses: actions/checkout@v1     # >@v1 fails on submodules
-        with:
-          submodules: true
-      - name: "Install build tools (ubuntu)"
+#     - name: "Checkout source"
+#       uses: actions/checkout@v1     # >@v1 fails on submodules
+#       with:
+#         submodules: true
+      - name: "Install build tools (Ubuntu)"
         run: sudo apt-get install ninja-build
-        if: contains( ${{inputs.os}}, "ubuntu" )
-      - name: "Install build tools (mac)"
+        if: contains(inputs.os, "ubuntu")
+      - name: "Install build tools (macOS)"
         run: brew install ninja
-        if: contains( ${{inputs.os}}, "mac" )
+        if: contains(inputs.os, "mac")
 #     - name: "Build and package"
 #       run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) package
       # <DEBUG>
       - run: |
           echo "Build and package"
           mkdir dist
-          echo foo > dist/wasi-sdk-$(./version.sh)-linux.tar.gz
-          echo bar > dist/libclang_rt.builtins-wasm32-wasi-$(./version.sh).tar.gz
-          echo baz > dist/wasi-sysroot-$(./version.sh).tar.gz
+          touch foo
+          tar -czvf dist/wasi-sdk-$(./version.sh)-linux.tar.gz foo
+          tar -czvf dist/libclang_rt.builtins-wasm32-wasi-$(./version.sh).tar.gz foo
+          tar -czvf dist/wasi-sysroot-$(./version.sh).tar.gz foo
+          rm foo
       # </DEBUG>
       - name: "Upload build artifacts"
         uses: actions/upload-artifact@v3
@@ -44,10 +46,10 @@ jobs:
     name: "Test ${{inputs.os}}"
     needs: build
     steps:
-      - name: "Checkout source"
-        uses: actions/checkout@v1
-        with:
-          submodules: false           # Not required for tests
+#     - name: "Checkout source"
+#       uses: actions/checkout@v1
+#       with:
+#         submodules: false           # Not required for tests
       - name: "Download build artifacts"
         uses: actions/download-artifact@v3
         with:
