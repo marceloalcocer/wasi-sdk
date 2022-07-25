@@ -13,23 +13,25 @@ on:
 
 jobs:
 
-  build:
-    name: "Build and test"
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-      fail-fast: false
-    runs-on: ${{matrix.os}}
+  build_ubuntu:
+    name: "Build and test (ubuntu)"
+    runs-on: ubuntu-latest
     uses: ./.github/workflows/build.yml
     with:
-      os: ${{matrix.os}}
+      os: ubuntu-latest
+  build_macos:
+    name: "Build and test (macos)"
+    runs-on: macos-latest
+    uses: ./.github/workflows/build.yml
+    with:
+      os: macos-latest
 
   release:
     name: "Release"
     runs-on: ubuntu-latest
-    needs: build
+    needs: 
+      - build_ubuntu
+      - build_macos
     if: >-
       contains(github.event_name, 'push')
       && contains(github.event.ref, 'refs/tags')
