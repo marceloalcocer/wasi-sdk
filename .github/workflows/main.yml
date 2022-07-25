@@ -24,7 +24,7 @@ jobs:
     runs-on: ${{matrix.os}}
     steps:
       - name: "Build and test"
-        uses: ./.github/workflows/build
+        uses: marceloalcocer/wasi-sdk/.github/workflows/build@dev
         with:
           os: ${{matrix.os}}
 
