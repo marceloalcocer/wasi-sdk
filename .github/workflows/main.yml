@@ -22,7 +22,7 @@ jobs:
           - macos-latest
       fail-fast: false
     runs-on: ${{matrix.os}}
-    uses: ./.github/workflows/build
+    uses: ./.github/workflows/build.yml
     with:
       os: ${{matrix.os}}
 
