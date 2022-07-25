@@ -37,12 +37,9 @@ jobs:
         uses: actions/download-artifact@v3
 #     - name: "Rename build artifacts"
 #       run: for file in dist-*/*.tar.gz; do mv $file ${file/.tar.gz/_${{runner.arch}}.tar.gz}; done
-      - run: ls -R dist-*
       - name: "Create release"
         uses: softprops/action-gh-release@v1
         with:
           draft: true
-          files: |
-            dist-ubuntu-latest/*.tar.gz
-            dist-macos-latest/*.tar.gz
+          files: dist-*/*.tar.gz
 

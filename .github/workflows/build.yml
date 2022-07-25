@@ -13,28 +13,28 @@ jobs:
     runs-on: ${{inputs.os}}
     name: "Build"
     steps:
-#     - name: "Checkout source"
-#       uses: actions/checkout@v1     # >@v1 fails on submodules
-#       with:
-#         submodules: true
-#     - name: "Install build tools (Ubuntu)"
-#       run: sudo apt-get install ninja-build
-#       if: contains(inputs.os, 'ubuntu')
-#     - name: "Install build tools (macOS)"
-#       run: brew install ninja
-#       if: contains(inputs.os, 'mac')
-#     - name: "Build and package"
-#       run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) package
-      # <DEBUG>
-      - run: |
-          echo "Build and package"
-          mkdir dist
-          mkdir wasi-sdk-0
-          tar -czvf dist/wasi-sdk-$(./version.sh)-linux.tar.gz wasi-sdk-0
-          tar -czvf dist/libclang_rt.builtins-wasm32-wasi-$(./version.sh).tar.gz wasi-sdk-0
-          tar -czvf dist/wasi-sysroot-$(./version.sh).tar.gz wasi-sdk-0
-          rmdir wasi-sdk-0
-      # </DEBUG>
+      - name: "Checkout source"
+        uses: actions/checkout@v1     # >@v1 fails on submodules
+        with:
+          submodules: true
+      - name: "Install build tools (Ubuntu)"
+        run: sudo apt-get install ninja-build
+        if: contains(inputs.os, 'ubuntu')
+      - name: "Install build tools (macOS)"
+        run: brew install ninja
+        if: contains(inputs.os, 'mac')
+      - name: "Build and package"
+        run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) package
+#     # <DEBUG>
+#     - run: |
+#         echo "Build and package"
+#         mkdir dist
+#         mkdir wasi-sdk-0
+#         tar -czvf dist/wasi-sdk-$(./version.sh)-linux.tar.gz wasi-sdk-0
+#         tar -czvf dist/libclang_rt.builtins-wasm32-wasi-$(./version.sh).tar.gz wasi-sdk-0
+#         tar -czvf dist/wasi-sysroot-$(./version.sh).tar.gz wasi-sdk-0
+#         rmdir wasi-sdk-0
+#     # </DEBUG>
       - name: "Upload build artifacts"
         uses: actions/upload-artifact@v3
         with:
@@ -46,10 +46,10 @@ jobs:
     name: "Test"
     needs: build
     steps:
-#     - name: "Checkout source"
-#       uses: actions/checkout@v1
-#       with:
-#         submodules: false           # Not required for tests
+      - name: "Checkout source"
+        uses: actions/checkout@v1
+        with:
+          submodules: false           # Not required for tests
       - name: "Download build artifacts"
         uses: actions/download-artifact@v3
         with:
@@ -61,10 +61,6 @@ jobs:
         run: >-
           mkdir build
           && mv wasi-sdk-* build/install
-#     - name: "Run test suite"
-#       run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) check
-      # <DEBUG>
-      - run: |
-          echo "Run test suite"
-      # </DEBUG>
+      - name: "Run test suite"
+        run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) check
 
