@@ -31,7 +31,7 @@ jobs:
   release:
     name: "Release"
     runs-on: ubuntu-latest
-    needs: test
+    needs: build
     if: >-
       contains(github.event_name, 'push')
       && contains(github.event.ref, 'refs/tags')
