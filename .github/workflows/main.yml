@@ -35,8 +35,8 @@ jobs:
     steps:
       - name: "Download build artifacts"
         uses: actions/download-artifact@v3
-      - name: "Rename build artifacts"
-        run: for file in dist-*/*.tar.gz; do mv $file ${file/.tar.gz/_${{runner.arch}}.tar.gz}; done
+#     - name: "Rename build artifacts"
+#       run: for file in dist-*/*.tar.gz; do mv $file ${file/.tar.gz/_${{runner.arch}}.tar.gz}; done
       - name: "Create release"
         uses: softprops/action-gh-release@v1
         with:
