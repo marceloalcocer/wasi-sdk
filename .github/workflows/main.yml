@@ -25,12 +25,19 @@ jobs:
     with:
       os: macos-latest
 
+  build_windows:
+    name: "Windows"
+    uses: ./.github/workflows/build.yml
+    with:
+      os: windows-2019
+
   release:
     name: "Release"
     runs-on: ubuntu-latest
     needs: 
       - build_ubuntu
       - build_macos
+      - build_windows
     if: github.ref_type == 'tag'
     steps:
       - name: "Download build artifacts"

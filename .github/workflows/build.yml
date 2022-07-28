@@ -9,22 +9,43 @@ on:
 
 jobs:
 
+  # Build (Ubuntu/macOS/Windows)
   build:
     runs-on: ${{inputs.os}}
     name: "Build"
     steps:
+
+      # Fetch source
       - name: "Checkout source"
         uses: actions/checkout@v1     # >@v1 fails on submodules
         with:
           submodules: true
+
+      # Install build tools
       - name: "Install build tools (Ubuntu)"
-        run: sudo apt-get install ninja-build
         if: contains(inputs.os, 'ubuntu')
+        run: sudo apt-get install ninja-build
       - name: "Install build tools (macOS)"
-        run: brew install ninja
         if: contains(inputs.os, 'mac')
-      - name: "Build and package"
+        run: brew install ninja
+      - name: "Install build tools (Windows)"
+        if: contains(inputs.os, 'windows')
+        run: choco install ninja
+
+      # Build and package
+      - name: "Build and package (Ubuntu/macOS)"
+        if: >-
+          contains(inputs.os, 'ubuntu')
+          || contains(inputs.os, 'mac')
         run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) package
+      - name: "Build and package (Windows)"
+        if: contains(inputs.os, 'windows')
+        shell: cmd
+        run: |
+          set "HOME=%CD%"
+          call 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat' amd64
+          C:\msys64\usr\bin\bash.exe --login -c "make package"
+        # N.b. vcvarsall.bat requires Visual Studio 2019 installation 
 #     # <DEBUG>
 #     - run: |
 #         echo "Build and package"
@@ -35,32 +56,53 @@ jobs:
 #         tar -czvf dist/wasi-sysroot-$(./version.sh).tar.gz wasi-sdk-0
 #         rmdir wasi-sdk-0
 #     # </DEBUG>
+#
+      # Upload build artifacts
       - name: "Upload build artifacts"
         uses: actions/upload-artifact@v3
         with:
           path: dist
           name: ${{ format('dist-{0}', inputs.os) }}
 
+  # Test
   test:
     runs-on: ${{inputs.os}}
     name: "Test"
     needs: build
     steps:
+
+      # Fetch tests
       - name: "Checkout source"
         uses: actions/checkout@v1
         with:
           submodules: false           # Not required for tests
+
+      # Fetch and install build
       - name: "Download build artifacts"
         uses: actions/download-artifact@v3
         with:
           name: ${{ format('dist-{0}', inputs.os) }}
           path: dist
       - name: "Extract build artifacts"
+        shell: bash
         run: tar -xvzf dist/wasi-sdk-*.tar.gz
       - name: "Install build artifacts"
+        shell: bash
         run: >-
           mkdir build
           && mv wasi-sdk-* build/install
-      - name: "Run test suite"
+
+      # Run tests
+      - name: "Run test suite (Ubuntu/macOS)"
+        if: >-
+          contains(inputs.os, 'ubuntu')
+          || contains(inputs.os, 'mac')
         run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) check
+      - name: "Run test suite (Windows)"
+        if: contains(inputs.os, 'windows')
+        shell: cmd
+        run: |
+          set "HOME=%CD%"
+          call 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat' amd64
+          C:\msys64\usr\bin\bash.exe --login -c "make check"
 
