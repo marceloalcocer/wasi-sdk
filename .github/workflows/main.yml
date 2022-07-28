@@ -13,17 +13,17 @@ on:
 
 jobs:
 
-  build_ubuntu:
-    name: "Ubuntu"
-    uses: ./.github/workflows/build.yml
-    with:
-      os: ubuntu-latest
+# build_ubuntu:
+#   name: "Ubuntu"
+#   uses: ./.github/workflows/build.yml
+#   with:
+#     os: ubuntu-latest
 
-  build_macos:
-    name: "macOS"
-    uses: ./.github/workflows/build.yml
-    with:
-      os: macos-latest
+# build_macos:
+#   name: "macOS"
+#   uses: ./.github/workflows/build.yml
+#   with:
+#     os: macos-latest
 
   build_windows:
     name: "Windows"
@@ -35,8 +35,8 @@ jobs:
     name: "Release"
     runs-on: ubuntu-latest
     needs: 
-      - build_ubuntu
-      - build_macos
+#     - build_ubuntu
+#     - build_macos
       - build_windows
     if: github.ref_type == 'tag'
     steps:
