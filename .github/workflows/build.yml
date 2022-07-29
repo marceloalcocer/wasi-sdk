@@ -50,7 +50,7 @@ jobs:
           CL_ARCHES: '{ "x86": "amd64_x86", "x64": "amd64" }'
         run: |
           set "HOME=%CD%"
-          set CL_ARCH=${{ fromJson(${{env.CL_ARCHES}})[inputs.arch] }}
+          set CL_ARCH=${{ fromJson(env.CL_ARCHES)[inputs.arch] }}
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %CL_ARCH%
           C:\msys64\usr\bin\bash.exe --login -c "make package"
 
@@ -86,7 +86,7 @@ jobs:
       - name: "Install build artifacts"
         shell: bash
         run: >-
-          mkdir build
+          ir build
           && mv wasi-sdk-* build/install
 
       # Run tests
@@ -107,7 +107,7 @@ jobs:
           CL_ARCHES: '{ "x86": "amd64_x86", "x64": "amd64" }'
         run: |
           set "HOME=%CD%"
-          set CL_ARCH=${{ fromJson(${{env.CL_ARCHES}})[inputs.arch] }}
+          set CL_ARCH=${{ fromJson(env.CL_ARCHES)[inputs.arch] }}
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" %CL_ARCH%
           C:\msys64\usr\bin\bash.exe --login -c "make check"
 
