@@ -62,7 +62,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           path: dist
-          name: ${{ format("dist-{0}", inputs.os) }}
+          name: ${{ format("dist-{0}-{1}", inputs.os, inputs.arch) }}
 
   # Test
   test:
@@ -81,7 +81,7 @@ jobs:
       - name: "Download build artifacts"
         uses: actions/download-artifact@v3
         with:
-          name: ${{ format("dist-{0}", inputs.os) }}
+          name: ${{ format("dist-{0}-{1}", inputs.os, inputs.arch) }}
           path: dist
       - name: "Extract build artifacts"
         shell: bash
@@ -89,7 +89,7 @@ jobs:
       - name: "Install build artifacts"
         shell: bash
         run: >-
-          ir build
+          mkdir build
           && mv wasi-sdk-* build/install
 
       # Run tests
