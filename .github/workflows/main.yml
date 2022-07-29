@@ -13,31 +13,42 @@ on:
 
 jobs:
 
-# build_ubuntu:
-#   name: "Ubuntu"
-#   uses: ./.github/workflows/build.yml
-#   with:
-#     os: ubuntu-latest
+  build_ubuntu_x64:
+    name: "Ubuntu"
+    uses: ./.github/workflows/build.yml
+    with:
+      os: ubuntu-latest
+      arch: x64
 
-# build_macos:
-#   name: "macOS"
-#   uses: ./.github/workflows/build.yml
-#   with:
-#     os: macos-latest
+  build_macos_x64:
+    name: "macOS"
+    uses: ./.github/workflows/build.yml
+    with:
+      os: macos-latest
+      arch: x64
 
-  build_windows:
+  build_windows_x64:
     name: "Windows"
     uses: ./.github/workflows/build.yml
     with:
-      os: windows-2019
+      os: windows-2019        # vcvarsall.bat requires Visual Studio 2019
+      arch: x64
+
+# build_windows_x86:
+#   name: "Windows"
+#   uses: ./.github/workflows/build.yml
+#   with:
+#     os: windows-2019        # vcvarsall.bat requires Visual Studio 2019
+#     arch: x86               # Cross-compilation
 
   release:
     name: "Release"
     runs-on: ubuntu-latest
     needs: 
-#     - build_ubuntu
-#     - build_macos
-      - build_windows
+      - build_ubuntu_x64
+      - build_macos_x64
+      - build_windows_x64
+#     - build_windows_x86
     if: github.ref_type == 'tag'
     steps:
       - name: "Download build artifacts"
