@@ -62,7 +62,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           path: dist
-          name: ${{ format("dist-{0}-{1}", inputs.os, inputs.arch) }}
+          name: ${{ format("dist-{0}", inputs.os) }}
 
   # Test
   test:
@@ -81,7 +81,7 @@ jobs:
       - name: "Download build artifacts"
         uses: actions/download-artifact@v3
         with:
-          name: ${{ format("dist-{0}-{1}", inputs.os, inputs.arch) }}
+          name: ${{ format("dist-{0}", inputs.os) }}
           path: dist
       - name: "Extract build artifacts"
         shell: bash
