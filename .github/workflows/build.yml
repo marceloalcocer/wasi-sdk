@@ -58,11 +58,11 @@ jobs:
           C:\msys64\usr\bin\bash.exe --login -c "make package"
 
       # Upload build artifacts
-      - name: "Upload build artifacts"
-        uses: actions/upload-artifact@v3
-        with:
-          path: dist
-          name: ${{ format("dist-{0}-{1}", inputs.os, inputs.arch) }}
+#     - name: "Upload build artifacts"
+#       uses: actions/upload-artifact@v3
+#       with:
+#         path: dist
+#         name: ${{ format("dist-{0}-{1}", inputs.os, inputs.arch) }}
 
   # Test
   test:
