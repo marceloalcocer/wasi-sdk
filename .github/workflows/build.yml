@@ -41,11 +41,17 @@ jobs:
       - name: "Build and package (Windows)"
         if: contains(inputs.os, 'windows')
         shell: cmd
+        env:
+          MSYS2_PATH_TYPE: inherit
+          MSYSTEM: MINGW64
+          CC: cl
+          CXX: cl
+          NINJA_FLAGS: -v
         run: |
           set "HOME=%CD%"
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
           C:\msys64\usr\bin\bash.exe --login -c "make package"
-        # N.b. vcvarsall.bat requires Visual Studio 2019 installation 
+          # N.b. vcvarsall.bat requires Visual Studio 2019 installation
 #     # <DEBUG>
 #     - run: |
 #         echo "Build and package"
