@@ -26,23 +26,23 @@ jobs:
 
       # Install build tools
       - name: "Install build tools (Ubuntu)"
-        if: contains(inputs.os, "ubuntu")
+        if: contains(inputs.os, 'ubuntu')
         run: sudo apt-get install ninja-build
       - name: "Install build tools (macOS)"
-        if: contains(inputs.os, "mac")
+        if: contains(inputs.os, 'mac')
         run: brew install ninja
       - name: "Install build tools (Windows)"
-        if: contains(inputs.os, "windows")
+        if: contains(inputs.os, 'windows')
         run: choco install ninja
 
       # Build and package
       - name: "Build and package (Ubuntu/macOS)"
         if: >-
-          contains(inputs.os, "ubuntu")
-          || contains(inputs.os, "mac")
+          contains(inputs.os, 'ubuntu')
+          || contains(inputs.os, 'mac')
         run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) package
       - name: "Build and package (Windows)"
-        if: contains(inputs.os, "windows")
+        if: contains(inputs.os, 'windows')
         shell: cmd
         env:
           MSYS2_PATH_TYPE: inherit
@@ -58,11 +58,11 @@ jobs:
           C:\msys64\usr\bin\bash.exe --login -c "make package"
 
       # Upload build artifacts
-#     - name: "Upload build artifacts"
-#       uses: actions/upload-artifact@v3
-#       with:
-#         path: dist
-#         name: ${{ format("dist-{0}-{1}", inputs.os, inputs.arch) }}
+      - name: "Upload build artifacts"
+        uses: actions/upload-artifact@v3
+        with:
+          path: dist
+          name: ${{ format('dist-{0}-{1}', inputs.os, inputs.arch) }}
 
   # Test
   test:
@@ -81,7 +81,7 @@ jobs:
       - name: "Download build artifacts"
         uses: actions/download-artifact@v3
         with:
-          name: ${{ format("dist-{0}-{1}", inputs.os, inputs.arch) }}
+          name: ${{ format('dist-{0}-{1}', inputs.os, inputs.arch) }}
           path: dist
       - name: "Extract build artifacts"
         shell: bash
@@ -95,11 +95,11 @@ jobs:
       # Run tests
       - name: "Run test suite (Ubuntu/macOS)"
         if: >-
-          contains(inputs.os, "ubuntu")
-          || contains(inputs.os, "mac")
+          contains(inputs.os, 'ubuntu')
+          || contains(inputs.os, 'mac')
         run: NINJA_FLAGS=-v PREFIX= make -j $(nproc) check
       - name: "Run test suite (Windows)"
-        if: contains(inputs.os, "windows")
+        if: contains(inputs.os, 'windows')
         shell: cmd
         env:
           MSYS2_PATH_TYPE: inherit
