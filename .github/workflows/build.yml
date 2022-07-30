@@ -86,11 +86,17 @@ jobs:
       - name: "Extract build artifacts"
         shell: bash
         run: tar -xvzf dist/wasi-sdk-*.tar.gz
-      - name: "Install build artifacts"
-        shell: bash
+      - name: "Install build artifacts (Ubuntu/macOS)"
+        if: >-
+          contains(inputs.os, 'ubuntu')
+          || contains(inputs.os, 'mac')
         run: >-
           mkdir build
           && mv wasi-sdk-* build/install
+      - name: "Install build artifacts (Windows)"
+        if: contains(inputs.os, 'windows')
+        shell: bash
+        run: mv wasi-sdk-* /c/wasi-sdk
 
       # Run tests
       - name: "Run test suite (Ubuntu/macOS)"
